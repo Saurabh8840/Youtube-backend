@@ -11,9 +11,14 @@ app.use(cors({
     credentials:true
 }))
 
-app.use(express.json())
+// app.use(express.json())
 app.use(express.urlencoded())
 app.use(express.static("public"))
 app.use(cookieParsar())
 
 export {app}
+
+
+import { registerUser } from "controllers/users.controller.js";
+
+app.use('/api/v1/users',registerUser)
