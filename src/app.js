@@ -11,7 +11,7 @@ app.use(cors({
     credentials:true
 }))
 
-// app.use(express.json())
+app.use(express.json())
 app.use(express.urlencoded())
 app.use(express.static("public"))
 app.use(cookieParsar())
