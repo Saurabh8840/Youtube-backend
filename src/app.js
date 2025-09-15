@@ -3,7 +3,7 @@ import cors from "cors"
 import cookieParsar from  "cookie-parser"
 
 
-const app=express();
+// const app=express();
 
 
 app.use(cors({
