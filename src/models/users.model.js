@@ -37,8 +37,7 @@ const User=new  Schema({
         required:[true,'Password is required']
         
     },
-    password:{
-
-    },
     
 },{timestamps:true})
+
+export default User;
