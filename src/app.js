@@ -3,7 +3,7 @@ import cors from "cors"
 import cookieParsar from  "cookie-parser"
 
 
-// const app=express();
+const app=express();
 
 
 app.use(cors({
@@ -18,7 +18,8 @@ app.use(cookieParsar())
 
 export {app}
 
+import userRouter from "./routes/user.routes.js";
 
-import { registerUser } from "controllers/users.controller.js";
 
-app.use('/api/v1/users',registerUser)
+//routes declarartion 
+app.use("api/v1/users",userRouter)
