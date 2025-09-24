@@ -139,11 +139,112 @@ const loginUser=asyncHandler(async(req,res)=>{
 
 
 
+const logoutUser=asyncHandler(async(req,res)=>{
+      
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $unset:{
+                refreshToken:1
+            }
+        },
+        {
+            new:true
+        }
+    )
+
+    const options={
+        httpsOnly:true,
+        secure:true
+    }
+
+    return res
+    .status(200)
+    .clearCookie("accessToken",options)
+    .clearCookie("refreshToken",options)
+    .json(new ApiResponse(200,{},"User logged Out"))
+
+
+
+
+})
+
+//till now we have created register user, login user, logout user,
+//now it time to create route for refresh token when accesstoken expires 
+//we need refresh token 
+
+
+
+const refreshAccessToken=asyncHandler(async(req,res)=>{
+
+    //summary of this controller
+    //target :- check refreshtoken , issues a new accesstoken ,
+    
+    //read the refreshToken(cookies Or header)
+    //verify it (check jwt signature &expirt)
+    //match it with db is you store token in db
+    //if valid issue a new accessToken 
+    //send it back in cookie/response
+
+
+    
+     //read the refresh token
+        const token=await req.cookies?.refreshToken || req.body.refreshToken;
+    
+        if(!token){
+            throw new ApiError(401,"unauthorized request");
+    
+        }
+    
+    try {
+       
+    
+        //verify token(check jwt )
+        const verifyToken=jwt.verify(token,process.env.REFRESH_TOKEN_SECRET);
+      
+        const user=await User.findById(verifyToken._id);
+    
+        if(!user){
+            throw new ApiError(401,"In valid refresh Token")
+    
+        }
+        //match token inside db 
+        if(token!==user?.refreshToken){
+            throw new ApiError(401,"refresh token not matched");
+        }
+        
+        //now generate accesstoken and refreshtoken
+        const {accessToken,newRefreshToken}=generateAccessAndRefreshToken(user._id);
+        
+        const option={
+            httpsOnly:true,
+            secure:true
+        }
+    
+        return res
+          .status(200)
+          .cookies("refreshToken",newRefreshToken,option)
+          .cookies("accessToken",accessToken,option)
+          .json(
+             new ApiError(
+                      200,
+                      {accessToken,refreshToken:newRefreshToken},
+                      "access token refreshed"
+                      
+            )
+          )
+    } catch (error) {
+        throw new ApiError(401,error?.message||"Invalid refresh Token")
+    }
+
+})
 
 
 
 
 
 export {registerUser ,
-    loginUser
+    loginUser,
+    logoutUser,
+    refreshAccessToken
 }
