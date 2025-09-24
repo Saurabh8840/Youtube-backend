@@ -240,6 +240,43 @@ const refreshAccessToken=asyncHandler(async(req,res)=>{
 })
 
 
+const changeCurrentPassword=asyncHandler(async(req,res)=>{
+
+    //target change current password 
+    const {oldPassword,newPassword}=req.body;
+    
+    if(!oldPassword || !newPassword){
+        throw new ApiError(400,"old password and new password is req")
+    }
+    
+    //now check password in db and match it with frontend one 
+    const user=await User.findById(req.user._id,);
+
+    if(!user ){
+        throw new ApiError(404,"user not found")
+    }
+
+    const isMatch= await User.isPasswordCorrect(oldPassword);
+
+    if(!isMatch){
+        throw new ApiError(401,"old Password is incorrect");
+    }
+
+    User.password=newPassword;
+    await User.save({validateBeforeSave:false});
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {},
+                "Password changed successfully"
+            )
+        )
+
+})
+
 
 
 
