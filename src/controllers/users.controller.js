@@ -370,7 +370,7 @@ const updateUserAvatar=asyncHandler(async(req,res)=>{
 
 })
 
-const updateCoverImage=asyncHandler(async(req,res)=>{
+const updateUserCoverImage=asyncHandler(async(req,res)=>{
      
     //cover image local path &check
     //cloudinary upload 
@@ -422,6 +422,6 @@ export {registerUser ,
     changeCurrentPassword,
     getCurrentUser,
     updateAccountDetails,
-    updateCoverImage,
+    updateUserCoverImage,
     updateUserAvatar
 };
