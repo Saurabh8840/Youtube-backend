@@ -6,6 +6,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { JsonWebTokenError } from "jsonwebtoken";
+import { upload } from "../middlewares/multer.middleware.js";
 
 async function generateAccessAndRefreshToken(id){
 
@@ -54,7 +55,7 @@ const registerUser=asyncHandler(async(req,res)=>{
     }
 
     let coverImageLocalPath;
-    if(req.files && Array.isArray(Request.files.coverImage) && req.files.coverImage.length>0){
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length>0){
         coverImageLocalPath=req.files.coverImage[0].path;
 
     }
@@ -369,7 +370,47 @@ const updateUserAvatar=asyncHandler(async(req,res)=>{
 
 })
 
+const updateCoverImage=asyncHandler(async(req,res)=>{
+     
+    //cover image local path &check
+    //cloudinary upload 
+    //save cloudinary path to db 
+    //return db in json 
+    const coverImageLocalPath=req.file?.path;
 
+    if(!coverImageLocalPath){
+        throw new ApiError(400,"cover file is missing ")
+    }
+    
+    //delete old image 
+
+    const coverImage=await uploadOnCloudinary(coverImageLocalPath);
+
+    if(!coverImage.url){
+        throw new ApiError(400,"inavlid cover image path ")
+    }
+
+    const user=await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set:{coverImage:coverImage.path}
+        },
+        {new:true}
+    ).select("-password -refreshToken")
+
+    if(!user){
+        throw new ApiError(401,"user not found")
+    }
+
+    return res
+        .status(200)
+        .json(
+
+            new ApiResponse(200,user,"uploaded cover image successfully")
+        )
+
+
+})
 
 
 
@@ -380,5 +421,7 @@ export {registerUser ,
     refreshAccessToken,
     changeCurrentPassword,
     getCurrentUser,
-    updateAccountDetails
+    updateAccountDetails,
+    updateCoverImage,
+    updateUserAvatar
 };
