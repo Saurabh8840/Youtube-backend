@@ -331,6 +331,44 @@ const updateAccountDetails=asyncHandler(async(req,res)=>{
     
 })
 
+const updateUserAvatar=asyncHandler(async(req,res)=>{
+
+    const avatarPath=req.file?.path;
+
+    if(!avatarPath){
+        throw new ApiError(400,"upload avatar ");
+    }
+    //delete old image 
+
+    const avatar=await uploadOnCloudinary(avatarPath);
+    
+    if(!avatar.url){
+        throw new ApiError(400,"Avatar file is required")
+    }
+    
+    //you have to save url of cloudinary in db 
+
+    const user=await User.findByIdAndUpdate(
+        user._id,
+        {
+            $set:{avatar:avatar.url}
+        },
+        {new:true}
+    ).select("-password -refreshToken")
+
+
+     
+    
+    return res
+       .status(200)
+       .json(new ApiResponse(
+        200,
+        user,
+        "avatar uplaoded successfullly"
+       ))
+
+})
+
 
 
 
