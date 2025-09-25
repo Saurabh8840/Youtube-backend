@@ -252,9 +252,7 @@ const changeCurrentPassword=asyncHandler(async(req,res)=>{
     //now check password in db and match it with frontend one 
     const user=await User.findById(req.user._id,);
 
-    if(!user ){
-        throw new ApiError(404,"user not found")
-    }
+    
 
     const isMatch= await User.isPasswordCorrect(oldPassword);
 
@@ -277,11 +275,38 @@ const changeCurrentPassword=asyncHandler(async(req,res)=>{
 
 })
 
+const getCurrentUser=asyncHandler(async(req,res)=>{
+     
+    //acces to db 
+    
+
+    return res
+       .status(200)
+       .json(
+        new ApiResponse(
+            200,
+            req.user,
+            "user profile "
+        )
+       )
+
+
+
+})
+
+const updateAccountDetails=asyncHandler(async(req,res)=>{
+
+})
+
+
 
 
 
 export {registerUser ,
     loginUser,
     logoutUser,
-    refreshAccessToken
-}
+    refreshAccessToken,
+    changeCurrentPassword,
+    getCurrentUser,
+    updateAccountDetails
+};
