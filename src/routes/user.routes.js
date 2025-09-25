@@ -5,6 +5,8 @@ import {  loginUser,
          refreshAccessToken,
          changeCurrentPassword,
          getCurrentUser,
+         updateUserAvatar,
+         updateUserCoverImage
 
  } from "../controllers/users.controller.js";
 import {verifyjwt} from "../middlewares/auth.middleware.js";
@@ -33,7 +35,10 @@ router.route("/logout").post(verifyjwt,logoutUser);
 router.route("/refresh-token").post(refreshAccessToken);
 router.route("/change-password").post(verifyjwt,changeCurrentPassword)
 router.route("/current-user").post(verifyjwt,getCurrentUser)
+router.route("/update-account").patch(verifyjwt,updateAccountDetails)
 
+router.route("/avatar").patch(verifyjwt,upload.single("avatar"),uploadUserAvatar)
+router.route("/cover-image").path(verifyjwt,upload.single("coverImage"),updateUserCoverImage)
 
 
 

@@ -34,14 +34,13 @@ const User=new  Schema({
         trim:true,
         index:true
     },
-    avatar:{
-        type:String,
-        required:true,
-
+    avatar: {
+         url: { type: String, required: true },
+        public_id: { type: String, required: true }
     },
-    coverImage:{
-        type:String,
-        required:true,
+    coverImage: {
+        url: { type: String, default: "" },
+        public_id: { type: String, default: "" }
     },
     password:{
         type:String,
