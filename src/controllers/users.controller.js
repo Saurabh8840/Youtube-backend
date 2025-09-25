@@ -295,8 +295,42 @@ const getCurrentUser=asyncHandler(async(req,res)=>{
 })
 
 const updateAccountDetails=asyncHandler(async(req,res)=>{
+     
+    //name, email,
 
+    const {email,fullname}=req.body
+
+    if(!email||!fullname){
+        throw new ApiError(400,"user name email are empty ")
+    }
+
+    const existingUser=await User.findById({email})
+    if(existingUser && existingUser._id !==req.user._id){
+        throw new ApiError(409,"email is already in use by another account ");
+
+    }
+    
+    const user=await User.findByIdAndUpdate(
+        req.user_id,
+        {
+            $set:{fullname,email}
+        },
+        {new:true}
+    ).select("-password -refreshToken");
+
+    if(!user){
+        throw new ApiError(404,"user not found")
+    }
+
+
+
+    return res 
+      .status(200)
+      .json(new ApiResponse(200,user,"Account details updated successfully"))
+    
+    
 })
+
 
 
 
