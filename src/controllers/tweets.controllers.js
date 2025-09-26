@@ -31,6 +31,12 @@ const createTweet=asyncHandler(async(req,res)=>{
     
 })
 
+const getUserTweet=asyncHandler(async(req,res)=>{
+
+    
+
+})
+
 export {
     createTweet
 }
