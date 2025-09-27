@@ -3,7 +3,11 @@ import { verifyjwt } from "../middlewares/auth.middleware.js";
 import { verify } from "jsonwebtoken";
 const router=Router();
  
-import { createTweet } from "../controllers/tweets.controllers.js";
+import { createTweet,
+         updateTweet,
+         getUserTweet,
+         deleteTweet
+ } from "../controllers/tweets.controllers.js";
 
 
  //instead of adding jwt to all route add once
@@ -13,6 +17,7 @@ router.route("/").post(createTweet)
 router.route("/user/:userId").get(getUserTweet)
 router.route("/:tweetId").delete(deleteTweet)
 router.route("/:tweetId").put(updateTweet)
+
 
 
 
