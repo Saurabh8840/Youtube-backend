@@ -60,10 +60,30 @@ const toggleSubscription=asyncHandler(async(req,res)=>{
 //controller to return subscriber list of a channel
 const getUserChannelSubscribers=asyncHandler(async(req,res)=>{
 
-    //i have to count subscription 
+    //i have to count subscriber
+    const {channelId}=req.params;
+
+    if(!channelId){
+        throw new ApiError(400,"channel id is required")
+    }
+
+    // const channelSubscriber=await Subscription.countDocuments({channel:channelId});
+    //we need list of user who subscribed so we need .find() 
     
+    const subscribers=await Subscription.find({channel:channelId}).populate("subscriber","username email");
+
+
+    
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200,{count:subscribers.length,subscribers},"Subscribers fetched successfullly")
+      )
     
 })
+
+
 
 
 const getSubscribedChannels=asyncHandler(async(req,res)=>{
