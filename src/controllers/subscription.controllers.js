@@ -85,18 +85,27 @@ const getUserChannelSubscribers=asyncHandler(async(req,res)=>{
 
 
 
-
+//list of channel to which user subscribed
 const getSubscribedChannels=asyncHandler(async(req,res)=>{
     
-    const {subscribedId}=req.params;
+    //i have to subscriber 
+    const {subscriberId}=req.params;
 
-    if(!subscribedId){
-        throw new ApiError(400,"need subcriber id")
+    if(!subscriberId){
+        throw new ApiError(400,"Subscriber  id is required")
     }
 
-    const subscriberCount=await Subscription.countDocuments({subscriber:subscriberId});
 
+    const subscriptions=await Subscription.find({subscriber:subscriberId}).populate("channel","username email");
     
+    //filter data bcz channel contain user info as well 
+    const channels=subscriptions.map(sub=>sub.channel);
+    
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200,{count:channels.length,channels},"channel fetched successfullly")
+      )
     
 })
 
