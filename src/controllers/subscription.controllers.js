@@ -111,3 +111,8 @@ const getSubscribedChannels=asyncHandler(async(req,res)=>{
 
 
 
+export default {
+    toggleSubscription,
+    getSubscribedChannels,
+    getUserChannelSubscribers
+}
