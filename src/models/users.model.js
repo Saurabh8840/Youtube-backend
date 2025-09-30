@@ -102,4 +102,6 @@ userSchema.methods.generateRefreshToken=function(){
         expiresIn:process.env.REFRESH_TOKEN_EXPIRY
     })
 }
-export default User;
+
+export const User=mongoose.model("User",userSchema)
+
