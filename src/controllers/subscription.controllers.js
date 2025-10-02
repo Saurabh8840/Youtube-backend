@@ -7,6 +7,9 @@ const toggleSubscription=asyncHandler(async(req,res)=>{
 
     //toggle subscription 
 
+    // if(!channelId){
+    //     throw new ApiError(400,"channel Id is required")
+    // }
     if(!channelId){
         throw new ApiError(400,"channel Id is required")
     }
